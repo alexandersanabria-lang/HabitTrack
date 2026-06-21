@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 
 data class HabitUiState(
     val habits: List<HabitEntity> = emptyList(),
+    val completedToday: Set<Int> = emptySet(),
     val isLoading: Boolean = false,
     val error: String? = null
 )
@@ -40,7 +41,14 @@ class HabitViewModel(private val repository: HabitRepository) : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             repository.getAllHabits().collect { habits ->
-                _uiState.value = HabitUiState(habits = habits, isLoading = false)
+                val today = java.time.LocalDate.now().toString()
+                val logs = repository.getLogsByDate(today)
+                val completedIds = logs.filter { it.completed }.map { it.habitId }.toSet()
+                _uiState.value = HabitUiState(
+                    habits = habits,
+                    completedToday = completedIds,
+                    isLoading = false
+                )
             }
         }
     }
@@ -67,6 +75,7 @@ class HabitViewModel(private val repository: HabitRepository) : ViewModel() {
         viewModelScope.launch {
             repository.insertLog(log)
         }
+        loadHabits()
     }
 
     fun loadQuote() {

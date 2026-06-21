@@ -29,6 +29,9 @@ fun NavGraph(
                 },
                 onAddClick = {
                     navController.navigate("habits/form")
+                },
+                onStatsClick = {
+                    navController.navigate("stats")
                 }
             )
         }

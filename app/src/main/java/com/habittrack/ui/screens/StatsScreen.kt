@@ -25,6 +25,10 @@ fun StatsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val quoteState by viewModel.quoteState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadQuote()
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(

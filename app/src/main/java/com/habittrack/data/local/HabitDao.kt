@@ -29,4 +29,10 @@ interface HabitDao {
 
     @Query("SELECT * FROM habit_logs WHERE date = :date")
     suspend fun getLogsByDate(date: String): List<HabitLogEntity>
+
+    @Query("SELECT * FROM habit_logs")
+    fun getAllLogs(): Flow<List<HabitLogEntity>>
+
+    @Query("DELETE FROM habit_logs WHERE habitId = :habitId AND date = :date")
+    suspend fun deleteLogByDate(habitId: Int, date: String)
 }
