@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.work.*
+import com.google.firebase.messaging.FirebaseMessaging
 import com.habittrack.data.local.AppDatabase
 import com.habittrack.domain.repository.HabitRepository
 import com.habittrack.ui.navigation.NavGraph
@@ -25,6 +26,12 @@ class MainActivity : ComponentActivity() {
         val repository = HabitRepository(database)
 
         scheduleHabitReminder()
+
+        // Token FCM para prueba
+        FirebaseMessaging.getInstance().token
+            .addOnSuccessListener { token ->
+                android.util.Log.d("FCM_TOKEN", "Token: $token")
+            }
 
         setContent {
             HabitTrackTheme {
