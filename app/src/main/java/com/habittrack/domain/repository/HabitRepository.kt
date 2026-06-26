@@ -32,7 +32,7 @@ class HabitRepository(private val database: AppDatabase) {
             .create(ZenQuotesApiService::class.java)
     }
 
-    suspend fun insertHabit(habit: HabitEntity) = habitDao.insertHabit(habit)
+    suspend fun insertHabit(habit: HabitEntity): Long = habitDao.insertHabit(habit)
     suspend fun updateHabit(habit: HabitEntity) = habitDao.updateHabit(habit)
     suspend fun deleteHabit(habit: HabitEntity) = habitDao.deleteHabit(habit)
     fun getAllHabits(): Flow<List<HabitEntity>> = habitDao.getAllHabits()

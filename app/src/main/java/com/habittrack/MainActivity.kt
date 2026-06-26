@@ -27,6 +27,10 @@ class MainActivity : ComponentActivity() {
 
         scheduleHabitReminder()
 
+        // Notificación inmediata para prueba
+        val testRequest = OneTimeWorkRequestBuilder<HabitReminderWorker>().build()
+        WorkManager.getInstance(this).enqueue(testRequest)
+
         // Token FCM para prueba
         FirebaseMessaging.getInstance().token
             .addOnSuccessListener { token ->

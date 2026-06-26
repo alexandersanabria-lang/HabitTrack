@@ -58,8 +58,9 @@ class HabitViewModel(private val repository: HabitRepository) : ViewModel() {
 
     fun insertHabit(habit: HabitEntity) {
         viewModelScope.launch {
-            repository.insertHabit(habit)
-            try { firestoreRepository.syncHabitToCloud(habit) } catch (e: Exception) { }
+            val id = repository.insertHabit(habit)
+            val habitWithId = habit.copy(id = id.toInt())
+            try { firestoreRepository.syncHabitToCloud(habitWithId) } catch (e: Exception) { }
         }
     }
 
