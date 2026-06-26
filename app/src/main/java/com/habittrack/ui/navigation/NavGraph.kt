@@ -6,9 +6,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.google.firebase.auth.FirebaseAuth
 import com.habittrack.ui.screens.HabitDetailScreen
 import com.habittrack.ui.screens.HabitFormScreen
 import com.habittrack.ui.screens.HabitListScreen
+import com.habittrack.ui.screens.LoginScreen
+import com.habittrack.ui.screens.RegisterScreen
 import com.habittrack.ui.screens.StatsScreen
 import com.habittrack.viewmodel.HabitViewModel
 
@@ -17,10 +20,39 @@ fun NavGraph(
     navController: NavHostController,
     viewModel: HabitViewModel
 ) {
+    val auth = FirebaseAuth.getInstance()
+    val startDestination = if (auth.currentUser != null) "habits/list" else "login"
+
     NavHost(
         navController = navController,
-        startDestination = "habits/list"
+        startDestination = startDestination
     ) {
+        composable("login") {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate("habits/list") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                },
+                onGoToRegister = {
+                    navController.navigate("register")
+                }
+            )
+        }
+
+        composable("register") {
+            RegisterScreen(
+                onRegisterSuccess = {
+                    navController.navigate("habits/list") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                },
+                onGoToLogin = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
         composable("habits/list") {
             HabitListScreen(
                 viewModel = viewModel,
@@ -32,6 +64,12 @@ fun NavGraph(
                 },
                 onStatsClick = {
                     navController.navigate("stats")
+                },
+                onLogout = {
+                    auth.signOut()
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }

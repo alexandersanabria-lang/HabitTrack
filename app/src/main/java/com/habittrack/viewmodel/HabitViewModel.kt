@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.habittrack.data.local.HabitEntity
 import com.habittrack.data.local.HabitLogEntity
 import com.habittrack.data.remote.QuoteDto
+import com.habittrack.domain.repository.FirestoreRepository
 import com.habittrack.domain.repository.HabitRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +33,8 @@ class HabitViewModel(private val repository: HabitRepository) : ViewModel() {
     private val _quoteState = MutableStateFlow(QuoteUiState())
     val quoteState: StateFlow<QuoteUiState> = _quoteState.asStateFlow()
 
+    private val firestoreRepository = FirestoreRepository()
+
     init {
         loadHabits()
         loadQuote()
@@ -56,18 +59,21 @@ class HabitViewModel(private val repository: HabitRepository) : ViewModel() {
     fun insertHabit(habit: HabitEntity) {
         viewModelScope.launch {
             repository.insertHabit(habit)
+            try { firestoreRepository.syncHabitToCloud(habit) } catch (e: Exception) { }
         }
     }
 
     fun updateHabit(habit: HabitEntity) {
         viewModelScope.launch {
             repository.updateHabit(habit)
+            try { firestoreRepository.syncHabitToCloud(habit) } catch (e: Exception) { }
         }
     }
 
     fun deleteHabit(habit: HabitEntity) {
         viewModelScope.launch {
             repository.deleteHabit(habit)
+            try { firestoreRepository.deleteHabitFromCloud(habit.id) } catch (e: Exception) { }
         }
     }
 

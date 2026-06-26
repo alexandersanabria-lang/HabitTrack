@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "966248070625",
+    "project_id": "habittrack-a97aa",
+    "storage_bucket": "habittrack-a97aa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966248070625:android:22347a667ea79331af66a0",
+        "android_client_info": {
+          "package_name": "com.habittrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCahNC7K4YHFVqYgInWojvI0jJnnJvK4Hg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

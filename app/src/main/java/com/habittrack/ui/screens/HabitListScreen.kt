@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,7 +36,8 @@ fun HabitListScreen(
     viewModel: HabitViewModel,
     onHabitClick: (Int) -> Unit,
     onAddClick: () -> Unit,
-    onStatsClick: () -> Unit = {}
+    onStatsClick: () -> Unit = {},
+    onLogout: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val today = LocalDate.now().toString()
@@ -48,7 +50,6 @@ fun HabitListScreen(
             .fillMaxSize()
             .background(Black100)
     ) {
-        // Glow superior decorativo
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -94,27 +95,44 @@ fun HabitListScreen(
                                 fontWeight = FontWeight.Normal
                             )
                         }
-                        Box(
-                            modifier = Modifier
-                                .size(44.dp)
-                                .clip(CircleShape)
-                                .background(GreenGlass)
-                                .border(1.dp, GreenNeon.copy(alpha = 0.4f), CircleShape)
-                                .clickable { onStatsClick() },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                Icons.Default.BarChart,
-                                contentDescription = "Estadísticas",
-                                tint = GreenNeon,
-                                modifier = Modifier.size(22.dp)
-                            )
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .size(44.dp)
+                                    .clip(CircleShape)
+                                    .background(GreenGlass)
+                                    .border(1.dp, GreenNeon.copy(alpha = 0.4f), CircleShape)
+                                    .clickable { onStatsClick() },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    Icons.Default.BarChart,
+                                    contentDescription = "Estadísticas",
+                                    tint = GreenNeon,
+                                    modifier = Modifier.size(22.dp)
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .size(44.dp)
+                                    .clip(CircleShape)
+                                    .background(RedError.copy(alpha = 0.1f))
+                                    .border(1.dp, RedError.copy(alpha = 0.4f), CircleShape)
+                                    .clickable { onLogout() },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    Icons.Default.ExitToApp,
+                                    contentDescription = "Cerrar sesión",
+                                    tint = RedError,
+                                    modifier = Modifier.size(22.dp)
+                                )
+                            }
                         }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Resumen del día
                     if (uiState.habits.isNotEmpty()) {
                         val completados = uiState.completedToday.size
                         val total = uiState.habits.size
@@ -137,11 +155,7 @@ fun HabitListScreen(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Text(
-                                        "Progreso de hoy",
-                                        color = White70,
-                                        fontSize = 12.sp
-                                    )
+                                    Text("Progreso de hoy", color = White70, fontSize = 12.sp)
                                     Text(
                                         "$completados / $total",
                                         color = GreenNeon,
@@ -177,11 +191,7 @@ fun HabitListScreen(
                     modifier = Modifier
                         .size(58.dp)
                         .clip(CircleShape)
-                        .background(
-                            Brush.linearGradient(
-                                listOf(GreenPrimary, GreenNeon)
-                            )
-                        )
+                        .background(Brush.linearGradient(listOf(GreenPrimary, GreenNeon)))
                         .clickable { onAddClick() },
                     contentAlignment = Alignment.Center
                 ) {
@@ -295,12 +305,7 @@ fun HabitCard(
             .fillMaxWidth()
             .clip(RoundedCornerShape(22.dp))
             .background(
-                Brush.linearGradient(
-                    listOf(
-                        Black70,
-                        accentColor.copy(alpha = 0.06f)
-                    )
-                )
+                Brush.linearGradient(listOf(Black70, accentColor.copy(alpha = 0.06f)))
             )
             .border(
                 width = 1.dp,
@@ -316,24 +321,16 @@ fun HabitCard(
             .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            // Emoji en caja con glow
             Box(
                 modifier = Modifier
                     .size(52.dp)
                     .clip(RoundedCornerShape(15.dp))
                     .background(
                         Brush.linearGradient(
-                            listOf(
-                                accentColor.copy(alpha = 0.2f),
-                                accentColor.copy(alpha = 0.05f)
-                            )
+                            listOf(accentColor.copy(alpha = 0.2f), accentColor.copy(alpha = 0.05f))
                         )
                     )
-                    .border(
-                        1.dp,
-                        accentColor.copy(alpha = 0.4f),
-                        RoundedCornerShape(15.dp)
-                    ),
+                    .border(1.dp, accentColor.copy(alpha = 0.4f), RoundedCornerShape(15.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(getCategoryEmoji(habit.category), fontSize = 24.sp)
@@ -367,15 +364,10 @@ fun HabitCard(
                         )
                     }
                     if (isCompleted) {
-                        Text(
-                            "· Listo hoy ✓",
-                            fontSize = 11.sp,
-                            color = GreenNeon.copy(alpha = 0.8f)
-                        )
+                        Text("· Listo hoy ✓", fontSize = 11.sp, color = GreenNeon.copy(alpha = 0.8f))
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                // Barra progreso
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.75f)
